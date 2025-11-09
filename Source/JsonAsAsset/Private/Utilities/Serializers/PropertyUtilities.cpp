@@ -398,8 +398,18 @@ void UPropertySerializer::DeserializePropertyValue(FProperty* Property, const TS
 			FString TextNamespace = Object->GetStringField(TEXT("Namespace"));
 			FString UniqueKey = Object->GetStringField(TEXT("Key"));
 			FString SourceString = Object->GetStringField(TEXT("SourceString"));
+			FString StringTableId = Object->GetStringField(TEXT("TableId"));
 
-			TextProperty->SetPropertyValue(OutValue, FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *TextNamespace, *UniqueKey));
+			const FName TableName(*StringTableId);
+			if (!StringTableId.IsEmpty())
+			{
+				const FText TableText = FText::FromStringTable(TableName, UniqueKey);
+				TextProperty->SetPropertyValue(OutValue, TableText);
+			}
+			else
+			{
+				TextProperty->SetPropertyValue(OutValue, FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *TextNamespace, *UniqueKey));
+			}
 		}
 	}
 	else if (CastField<const FFieldPathProperty>(Property)) {
