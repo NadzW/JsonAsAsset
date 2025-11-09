@@ -408,6 +408,7 @@ void UPropertySerializer::DeserializePropertyValue(FProperty* Property, const TS
 			}
 			else
 			{
+				UE_LOG(LogJsonAsAssetPropertySerializer, Warning, TEXT("StringTableID is empty! Setting FText to source string instead... "));
 				TextProperty->SetPropertyValue(OutValue, FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*SourceString, *TextNamespace, *UniqueKey));
 			}
 		}
